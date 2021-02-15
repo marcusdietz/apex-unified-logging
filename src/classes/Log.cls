@@ -8,7 +8,7 @@ public with sharing class Log {
 
 
 	// PUBLIC
-
+	
 	public static void debug(String message) {
 		debug(message, new List<Object>(), null);
 	}
@@ -57,7 +57,26 @@ public with sharing class Log {
 	public static void error(String message, List<Object> values, Id contextId) {
 		emit(message, values, contextId, LoggingLevel.ERROR);
 	}
-
+	
+    // Invocable Method to create logs from Flow or Process Builder
+    @InvocableMethod(label='Log Flow Error')
+    	public static void debugFlow(List<debugInvocable> values) {
+                        
+            for(debugInvocable loopVar : values){
+                debug(loopVar.message, new List<Object>(), loopVar.contextId);
+            }
+	}
+        
+        
+    // Use Invocable variables to allow Flow fault to send string and context id rather than List
+    public class debugInvocable{
+        @InvocableVariable(required=true label ='Debug Message')
+        public string message;
+        
+        @InvocableVariable(label = 'Record Id')
+        public Id contextId;
+       
+    }
 
 	// PRIVATE
 
